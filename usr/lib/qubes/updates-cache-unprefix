@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+export LC_ALL=C
+
+while read -r old_url whatever; do
+    new_url=${old_url#http://10.137.*/}
+
+    if test "$new_url" = "$old_url"; then
+        printf 'ERR\n'  # = "Do not change the URL"
+    else
+        printf 'OK rewrite-url=%s\n' "$new_url"
+    fi
+done

@@ -1,0 +1,24 @@
+# Based on /usr/lib/systemd/system/squid.service from Fedora 23
+
+[Unit]
+Description=Qubes updates cache (Squid)
+ConditionPathExists=/var/run/qubes-service/qubes-updates-cache
+After=qubes-iptables.service
+After=network.target nss-lookup.target
+
+[Service]
+Type=forking
+LimitNOFILE=16384
+Environment=SQUID_CONF=/etc/squid/qubes-updates-cache.conf SQUID_OPTS=
+ExecStartPre=/usr/lib/qubes/updates-cache-iptables start
+ExecStartPre=/usr/sbin/squid squid -N -z -F -f $SQUID_CONF
+ExecStart=/usr/sbin/squid $SQUID_OPTS -f $SQUID_CONF
+ExecReload=/usr/sbin/squid $SQUID_OPTS -k reconfigure -f $SQUID_CONF
+ExecStop=/usr/sbin/squid -k shutdown -f $SQUID_CONF
+ExecStopPost=/usr/lib/qubes/updates-cache-iptables stop
+TimeoutSec=0
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
