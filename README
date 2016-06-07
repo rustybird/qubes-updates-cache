@@ -34,8 +34,7 @@ service:
     [dom0] $ qvm-service squidp --enable qubes-updates-cache
 
 Copy this directory (containing the README you're reading) into your new
-ProxyVM's template, carefully inspect the install-server script there
-and:
+ProxyVM's template, carefully inspect its contents there and:
 
     [squidp's template] # dnf install squid
     [squidp's template] # ./install-server
