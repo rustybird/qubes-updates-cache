@@ -36,9 +36,9 @@ service:
 Copy this directory (containing the README you're reading) into your new
 ProxyVM's template, carefully inspect its contents there and:
 
-    [squidp's template] # dnf install squid
-    [squidp's template] # ./install-server
-    [squidp's template] # poweroff
+    [fedora-23] # dnf install squid
+    [fedora-23] # ./install-server
+    [fedora-23] # poweroff
 
 For each of the client VMs whose package updates you want to cache (in
 this example, a Debian template), copy the install-client script into
