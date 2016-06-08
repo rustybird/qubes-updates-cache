@@ -12,16 +12,16 @@ Create a new ProxyVM, which currently should be based on Fedora 23
 (minimal is okay), ensure it has a netvm, and enable the
 qubes-updates-proxy service:
 
-    [dom0] $ qvm-create --proxy --label red --template fedora-23 squidp
+    [dom0] $ qvm-create --proxy --label red --template fedora-23-clone-2 squidp
     [dom0] $ qvm-prefs --set squidp netvm default  # or sys-whonix etc.
     [dom0] $ qvm-service squidp --enable qubes-updates-proxy
 
 Copy this directory (containing the README you're reading) into your new
 ProxyVM's template, carefully inspect its contents there and:
 
-    [fedora-23] # dnf install squid
-    [fedora-23] # ./install
-    [fedora-23] # poweroff
+    [fedora-23-clone-2] # dnf install squid
+    [fedora-23-clone-2] # ./install
+    [fedora-23-clone-2] # poweroff
 
 Make your new ProxyVM the netvm for each of the clients whose package
 updates you want to cache (in this example, a Debian template), and
