@@ -9,7 +9,6 @@ if [ "$1" = stop ]; then
     iptables -w -t filter -D $RULE_FILTER
     iptables -w -t nat    -D $RULE_NAT
 elif [ -e /var/run/qubes-service/qubes-updates-cache ]; then  # start
-
     iptables -w -t filter -C $RULE_FILTER ||
     iptables -w -t filter -I $RULE_FILTER ||
     STATUS=1
