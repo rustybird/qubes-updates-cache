@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+export LC_ALL=C
+
+set \
+'s#.*\bfedora\(project\)\?\b.*/\(\(releases\|updates\)/[0-9][0-9]/.*\)#http://fedora.mirrors.squid.internal/\2#' \
+'s#.*/debian/\(\(dists\|pool\)/.*\)#http://debian.mirrors.squid.internal/\1#'
+
+while read -r req_url whatever; do
+    old=$req_url
+    for regex; do
+        new=$(printf %s "$old" | sed "$regex")
+        [ "$new" = "$old" ] && old=$new || break
+    done
+
+    if [ "$req_url" = "$new" ]; then
+        systemd-cat -t dedup printf 'other: %s' "$req_url"
+        printf 'ERR\n'
+    else
+        systemd-cat -t dedup printf 'match: %s ~ %s' "$req_url" "$new"
+        printf 'OK store-id=%s\n' "$new"
+    fi
+done

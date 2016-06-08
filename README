@@ -2,70 +2,33 @@
 
 Updating my various templates was getting a little annoying with all the
 redundant network traffic, so I set up a qubes-updates-cache modeled on
-qubes-updates-proxy, using standalone Squid (no Apache etc. involved).
-
-One caveat: If you want to use this, you need to (run a provided script
-to) modify your client templates' repo configuration URLs so that they
-explicitly point to the cache, and in some cases to a specific mirror
-instead of the mirror rotation, e.g.
-
-  Before: http://download.fedoraproject.org/...
-   After: http://10.137.255.254:8083/https://dl.fedoraproject.org/...
-
-As you can see, the advantage here is being able to download over HTTPS
-(for privacy, not integrity) while still caching the downloaded files,
-without any convoluted MitM setup. The provided sed script switches
-several of the standard Fedora/Debian/Whonix repositories to HTTPS.
-
-The downside is that those modified URLs may be overwritten during some
-system updates, at which point you'd have to rerun the sed script; which
-should be idempotent though. Eventually, a dnf/apt plugin modifying URLs
-"just in time" without clobbering configuration files would be good.
+and replacing qubes-updates-proxy, using standalone Squid (no Apache
+etc. involved).
 
 
         Installation
 
 Create a new ProxyVM, which currently should be based on Fedora 23
-(minimal is okay). Ensure it has a netvm and enable the updates cache
-service:
+(minimal is okay), ensure it has a netvm, and enable the
+qubes-updates-proxy service:
 
     [dom0] $ qvm-create --proxy --label red --template fedora-23 squidp
     [dom0] $ qvm-prefs --set squidp netvm default  # or sys-whonix etc.
-    [dom0] $ qvm-service squidp --enable qubes-updates-cache
+    [dom0] $ qvm-service squidp --enable qubes-updates-proxy
 
 Copy this directory (containing the README you're reading) into your new
 ProxyVM's template, carefully inspect its contents there and:
 
     [fedora-23] # dnf install squid
-    [fedora-23] # ./install-server
+    [fedora-23] # ./install
     [fedora-23] # poweroff
 
-For each of the client VMs whose package updates you want to cache (in
-this example, a Debian template), copy the install-client script into
-the client, carefully inspect it there -- the comments explain what it
-does -- and:
+Make your new ProxyVM the netvm for each of the clients whose package
+updates you want to cache (in this example, a Debian template), and
+ensure connections to the updates proxy/cache are allowed:
 
-    [debian-8] # ./install-client
-    [debian-8] # poweroff
-
-Disable the (non-caching) updates proxy setup services on the client,
-and make your new ProxyVM the client's netvm:
-
-    [dom0] $ qvm-service debian-8 --disable updates-proxy-setup
-    [dom0] $ qvm-service debian-8 --disable     yum-proxy-setup
-    [dom0] $ qvm-start squidp
     [dom0] $ qvm-prefs --set debian-8 netvm squidp
-
-If, like in this example, your client is a template (as opposed to a
-StandaloneVM), then change its firewall settings to deny absolutely all
-access except TCP connections to 10.137.255.254:8083:
-
-    [dom0] $ qvm-firewall debian-8 --policy    deny
-    [dom0] $ qvm-firewall debian-8 --icmp      deny
-    [dom0] $ qvm-firewall debian-8 --dns       deny
-    [dom0] $ qvm-firewall debian-8 --yum-proxy deny
-    [dom0] $ qvm-firewall debian-8 --add 10.137.255.254 tcp 8083
-    [dom0] $ qvm-firewall debian-8 --list --numeric  # all good?
+    [dom0] $ qvm-firewall debian-8 --yum-proxy allow
 
 That's it! Up to 4 GiB of package updates will be cached to squidp's
 volatile storage in /var/lib/qubes/vm-updates/. If you really want to

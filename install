@@ -9,4 +9,5 @@ install usr/lib/qubes/*             "$DESTDIR"/usr/lib/qubes
 install -d                          "$DESTDIR"/usr/lib/systemd/system
 install usr/lib/systemd/system/*    "$DESTDIR"/usr/lib/systemd/system
 
+systemctl mask   qubes-updates-proxy.service
 systemctl enable qubes-updates-cache.service
