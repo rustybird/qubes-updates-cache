@@ -1,19 +1,18 @@
         qubes-updates-cache, a Squid-based package update cache
 
 Updating my various templates was getting a little annoying with all the
-redundant network traffic, so I set up a qubes-updates-cache modeled on and
-replacing qubes-updates-proxy, using standalone Squid (no Apache etc.
-involved).
+redundant network traffic, so I set up a qubes-updates-cache modeled on
+qubes-updates-proxy, using standalone Squid (no Apache etc. involved).
 
 
         Installation
 
 Create a new ProxyVM, which currently should be based on Fedora 23 (minimal is
-okay), ensure it has a netvm, and enable the qubes-updates-proxy service:
+okay), ensure it has a netvm, and enable the qubes-updates-cache service:
 
     [dom0] $ qvm-create --proxy --label red --template fedora-23-clone-2 squidp
     [dom0] $ qvm-prefs --set squidp netvm default  # or sys-whonix etc.
-    [dom0] $ qvm-service squidp --enable qubes-updates-proxy
+    [dom0] $ qvm-service squidp --enable qubes-updates-cache
 
 Copy this directory (containing the README you're reading) into your new
 ProxyVM's template, carefully inspect its contents there and:
@@ -24,7 +23,8 @@ ProxyVM's template, carefully inspect its contents there and:
 
 Make your new ProxyVM the netvm for each of the clients whose package updates
 you want to cache (in this example, a Debian template), and ensure connections
-to the updates proxy/cache are allowed:
+to the updates cache (which uses the same IP:port as the non-caching updates
+proxy) are allowed:
 
     [dom0] $ qvm-prefs --set debian-8 netvm squidp
     [dom0] $ qvm-firewall debian-8 --yum-proxy allow
