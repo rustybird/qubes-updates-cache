@@ -1,16 +1,15 @@
         qubes-updates-cache, a Squid-based package update cache
 
 Updating my various templates was getting a little annoying with all the
-redundant network traffic, so I set up a qubes-updates-cache modeled on
-and replacing qubes-updates-proxy, using standalone Squid (no Apache
-etc. involved).
+redundant network traffic, so I set up a qubes-updates-cache modeled on and
+replacing qubes-updates-proxy, using standalone Squid (no Apache etc.
+involved).
 
 
         Installation
 
-Create a new ProxyVM, which currently should be based on Fedora 23
-(minimal is okay), ensure it has a netvm, and enable the
-qubes-updates-proxy service:
+Create a new ProxyVM, which currently should be based on Fedora 23 (minimal is
+okay), ensure it has a netvm, and enable the qubes-updates-proxy service:
 
     [dom0] $ qvm-create --proxy --label red --template fedora-23-clone-2 squidp
     [dom0] $ qvm-prefs --set squidp netvm default  # or sys-whonix etc.
@@ -23,14 +22,14 @@ ProxyVM's template, carefully inspect its contents there and:
     [fedora-23-clone-2] # ./install
     [fedora-23-clone-2] # poweroff
 
-Make your new ProxyVM the netvm for each of the clients whose package
-updates you want to cache (in this example, a Debian template), and
-ensure connections to the updates proxy/cache are allowed:
+Make your new ProxyVM the netvm for each of the clients whose package updates
+you want to cache (in this example, a Debian template), and ensure connections
+to the updates proxy/cache are allowed:
 
     [dom0] $ qvm-prefs --set debian-8 netvm squidp
     [dom0] $ qvm-firewall debian-8 --yum-proxy allow
 
-That's it! Up to 4 GiB of package updates will be cached to squidp's
-volatile storage in /var/lib/qubes/vm-updates/. If you really want to
-keep them across reboots, bind mount a directory in /rw/ owned by
-squid:squid to that destination.
+That's it! Up to 4 GiB of package updates will be cached to squidp's volatile
+storage in /var/lib/qubes/vm-updates/. If you really want to keep them across
+reboots, bind mount a directory in /rw/ owned by squid:squid to that
+destination.
