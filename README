@@ -22,12 +22,17 @@ ProxyVM's template, carefully inspect its contents there and:
     [fedora-23-clone-2] # poweroff
 
 Make your new ProxyVM the netvm for each of the clients whose package updates
-you want to cache (in this example, a Debian template), and ensure connections
-to the updates cache (which uses the same IP:port as the non-caching updates
-proxy) are allowed:
+you want to cache (in this example, a Whonix workstation template), and ensure
+connections to the updates cache (which uses the same IP:port as the non-
+caching updates proxy) are allowed:
 
-    [dom0] $ qvm-prefs --set debian-8 netvm squidp
-    [dom0] $ qvm-firewall debian-8 --yum-proxy allow
+    [dom0] $ qvm-prefs --set whonix-ws netvm squidp
+    [dom0] $ qvm-firewall whonix-ws --yum-proxy allow
+
+Finally, for Whonix gateway/workstation clients, you currently need to bypass
+the safety mechanism that checks for a torified update proxy:
+
+    [dom0] $ qvm-service whonix-ws --enable whonix-secure-proxy
 
 That's it! Up to 4 GiB of package updates will be cached to squidp's volatile
 storage in /var/lib/qubes/vm-updates/. If you really want to keep them across
