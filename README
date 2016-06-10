@@ -5,6 +5,32 @@ redundant network traffic, so I set up a qubes-updates-cache modeled on
 qubes-updates-proxy, using standalone Squid (no Apache etc. involved).
 
 
+        Security considerations
+
+1. For Tor users, the remote network gains some insight about what's installed
+   on the same physical computer, and its fingerprint becomes more precise,
+   because there is no Tor circuit isolation between update requests from
+   different clients. This can be prevented by waiting at least 10 minutes (or
+   sending NEWNYM) between updating different clients.
+2. The remote network can distinguish if a file is requested via qubes-updates-
+   cache (Squid) or via qubes-updates-proxy (tinyproxy). The former's user base
+   is smaller, making attacks (where valid signatures for malicious packages
+   can be produced somehow) more targeted even over Tor, i.e. less likely to be
+   detected.
+3. Clients can DOS each other's package updaters by poisoning the cache with
+   bogus updates, because qubes-updates-cache's deduplication makes no attempt
+   to verify that a file is requested from a server that's in an official
+   mirror rotation.
+4. Clients can determine if a package is installed on another client on the
+   same physical computer by requesting it and measuring cache response time.
+5. Preferably, qubes-updates-cache should be hosted on a separate ProxyVM only
+   used by templates, not by template-based VMs: Otherwise, the only thing that
+   prevents template-based VMs (which are more likely to be compromised than
+   the templates themselves) from also launching attacks (3) and (4) is the
+   firewall rule denying access to the updates proxy port; but the Qubes
+   firewall is not designed to be a reliable security mechanism.
+
+
         Installation
 
 Create a new ProxyVM, which currently should be based on Fedora 23 (minimal is
