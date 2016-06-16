@@ -61,6 +61,7 @@ the safety mechanism that checks for a torified update proxy:
     [dom0] $ qvm-service whonix-ws --enable whonix-secure-proxy
 
 That's it! Up to 4 GiB of package updates will be cached to squidp's volatile
-storage in /var/lib/qubes/vm-updates/. If you really want to keep them across
-reboots, bind mount a directory in /rw/ owned by squid:squid to that
-destination.
+storage in /var/lib/qubes/vm-updates/. If you want to keep them across reboots,
+use /rw/config/rc.local, or /rw/config/qubes-bind-dirs.d/ in Qubes 3.2, to bind
+mount a directory in /rw/ owned by squid:squid to that destination. (The
+qubes-updates-cache systemd service starts after these hooks have finished.)
