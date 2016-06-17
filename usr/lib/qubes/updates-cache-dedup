@@ -14,10 +14,10 @@ while read -r req_url whatever; do
     done
 
     if [ "$req_url" = "$new" ]; then
-        systemd-cat -t dedup printf 'other: %s' "$req_url"
+        printf 'dedup: other %s\n' "$req_url" >&2
         printf 'ERR\n'
     else
-        systemd-cat -t dedup printf 'match: %s ~ %s' "$req_url" "$new"
+        printf 'dedup: match %s ~ %s\n' "$req_url" "$new" >&2
         printf 'OK store-id=%s\n' "$new"
     fi
 done
