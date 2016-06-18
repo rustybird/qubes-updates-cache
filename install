@@ -1,12 +1,6 @@
 #!/bin/sh
 set -ex
 
-install -d -m 750 -o squid -g squid     "$DESTDIR"/var/lib/qubes/vm-updates
-install -d                              "$DESTDIR"/etc/squid
-install -m 644 etc/squid/*              "$DESTDIR"/etc/squid
-install -d                              "$DESTDIR"/usr/lib/qubes
-install usr/lib/qubes/*                 "$DESTDIR"/usr/lib/qubes
-install -d                              "$DESTDIR"/usr/lib/systemd/system
-install -m 644 usr/lib/systemd/system/* "$DESTDIR"/usr/lib/systemd/system
-
-systemctl enable qubes-updates-cache.service
+install -d -m 750 -o squid -g squid "$DESTDIR"/var/lib/qubes/vm-updates
+umask 022
+cp -R etc usr "$DESTDIR"/
