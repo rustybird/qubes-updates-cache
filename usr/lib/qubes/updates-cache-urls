@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+if [[ $1 != rewrite-url && $1 != store-id ]]; then
+    echo "Usage: $0 rewrite-url|store-id" >&2
+    exit 1
+fi
+
+export LC_ALL=C
+unset regex suffix_captured prefix_store_id prefix_rewrite_url
+source /etc/qubes-updates-cache/urls.conf
+declare -n prefix=prefix_${1/-/_}  # fails on bash < 4.3
+
+while read -r old_url whatever; do
+    for i in ${!prefix[@]}; do
+        if [[ $old_url =~ ${regex[$i]} ]]; then
+            new_url=${prefix[$i]}${BASH_REMATCH[${suffix_captured[$i]}]}
+            printf '%s: replacing %s with %s\n' "$1" "$old_url" "$new_url" >&2
+            printf 'OK %s=%s\n' "$1" "$new_url"
+            continue 2
+        fi
+    done
+
+    printf '%s: keeping %s\n' "$1" "$old_url" >&2
+    printf 'ERR\n'
+done
