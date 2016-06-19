@@ -14,12 +14,12 @@ while read -r old_url whatever; do
     for i in ${!prefix[@]}; do
         if [[ $old_url =~ ${regex[$i]} ]]; then
             new_url=${prefix[$i]}${BASH_REMATCH[${suffix_captured[$i]}]}
-            printf '%s: replacing %s with %s\n' "$1" "$old_url" "$new_url" >&2
+            printf '%s: replace %s with %s\n' "$1" "$old_url" "$new_url" >&2
             printf 'OK %s=%s\n' "$1" "$new_url"
             continue 2
         fi
     done
 
-    printf '%s: keeping %s\n' "$1" "$old_url" >&2
+    printf '%s: keep %s\n' "$1" "$old_url" >&2
     printf 'ERR\n'
 done
