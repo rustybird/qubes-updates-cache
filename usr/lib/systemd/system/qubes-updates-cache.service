@@ -1,6 +1,6 @@
 [Unit]
 Description=Qubes updates cache (Squid)
-ConditionPathExists=/var/run/qubes-service/qubes-updates-cache
+ConditionPathExists= /var/run/qubes-service/qubes-updates-cache
 ConditionPathExists=!/var/run/qubes-service/qubes-updates-proxy
 ConditionPathExists=!/var/run/qubes-service/qubes-yum-proxy
 After=qubes-iptables.service qubes-mount-dirs.service qubes-misc-post.service
@@ -10,9 +10,9 @@ After=network.target nss-lookup.target
 LimitNOFILE=16384
 Environment=SQUID_CONF=/etc/qubes-updates-cache/squid.conf
 ExecStartPre=/usr/lib/qubes/updates-cache-iptables start
-ExecStartPre=/usr/sbin/squid -N -f $SQUID_CONF -z -F
-ExecStart=/usr/sbin/squid -N -f $SQUID_CONF
-ExecReload=/bin/kill -HUP $MAINPID
+ExecStartPre=/usr/sbin/squid -f $SQUID_CONF -NzF
+ExecStart   =/usr/sbin/squid -f $SQUID_CONF -N
+ExecReload  =/bin/kill -HUP $MAINPID
 ExecStopPost=/usr/lib/qubes/updates-cache-iptables stop
 KillMode=process
 TimeoutSec=0
