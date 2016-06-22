@@ -17,7 +17,7 @@ ExecStopPost=/usr/lib/qubes/updates-cache-iptables stop
 KillMode=process
 TimeoutSec=0
 Restart=on-failure
-RestartSec=5s
+RestartSec=1s
 
 [Install]
 WantedBy=multi-user.target
