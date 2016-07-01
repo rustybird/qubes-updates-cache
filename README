@@ -20,7 +20,9 @@ qubes-updates-proxy, using standalone Squid (no Apache etc. involved).
 3. Clients can DOS each other's package updaters by poisoning the cache with
    bogus updates, because qubes-updates-cache's deduplication makes no attempt
    to verify that a file is requested from a server that's in an official
-   mirror rotation.
+   mirror rotation. This can be prevented by selecting a specific mirror in
+   /etc/qubes-updates-cache/urls.conf, e.g. by removing the comment character
+   from lines 4 and 9.
 4. Clients can determine if a package is installed on another client on the
    same physical computer by requesting it and measuring cache response time.
 5. Preferably, qubes-updates-cache should be hosted on a separate ProxyVM only
