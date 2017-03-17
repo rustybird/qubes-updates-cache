@@ -30,7 +30,7 @@ qubes-updates-proxy, using standalone Squid (no Apache etc. involved).
    prevents template-based VMs (which are more likely to be compromised than
    the templates themselves) from also launching attacks (3) and (4) is the
    firewall rule denying access to the updates proxy port; but the Qubes
-   firewall is not designed to be a reliable security mechanism.
+   firewall is not intended to be a security mechanism.
 
 
         Installation
