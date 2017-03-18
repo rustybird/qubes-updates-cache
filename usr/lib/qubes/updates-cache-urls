@@ -5,20 +5,64 @@ if [[ $1 != rewrite-url && $1 != store-id ]]; then
     exit 1
 fi
 
-export LC_ALL=C
-unset regex suffix_captured prefix_store_id prefix_rewrite_url
-source /etc/qubes-updates-cache/urls.conf
-declare -n prefix=prefix_${1/-/_}  # fails on bash < 4.3
 
-while read -r old_url whatever; do
-    for i in ${!prefix[@]}; do
-        if [[ $old_url =~ ${regex[$i]} ]]; then
-            new_url=${prefix[$i]}${BASH_REMATCH[${suffix_captured[$i]}]}
-            if [[ $old_url != $new_url ]]; then
-                printf '%s: change %s to %s\n' "$1" "$old_url" "$new_url" >&2
-                printf 'OK %s=%s\n' "$1" "$new_url"
-                continue 2
+# load configuration files
+
+regex=()
+suffix_captured=()
+prefix_store_id=()
+prefix_rewrite_url=()
+
+dirs=( {/usr/local,}/etc/qubes-updates-cache/urls/ )
+readarray -t files < <(
+    find "${dirs[@]}" -maxdepth 1 -name '*.bash' 2>/dev/null |
+    sed 's#.*/##' |
+    sort -u
+)
+
+for f in "${files[@]}"; do
+    for d in "${dirs[@]}"; do
+        if [[ -e "$d/$f" ]]; then
+            source "$d/$f"
+            break
+        fi
+    done
+done
+
+
+# mangle URLs
+
+if [[ $1 == store-id ]]; then
+    declare -n  this_prefix=prefix_store_id
+    declare -n other_prefix=prefix_rewrite_url
+else
+    declare -n  this_prefix=prefix_rewrite_url
+    declare -n other_prefix=prefix_store_id
+fi
+
+export LC_ALL=C
+while read -r old_url _ignored_rest_of_line; do
+    new_url=$old_url
+
+    for i in ${!this_prefix[@]}; do
+        if [[ ${regex[i]} ]]; then
+            if [[ ${this_prefix[i]} && $old_url =~ ${regex[i]} ]]; then
+                new_url=${this_prefix[i]}${BASH_REMATCH[${suffix_captured[i]}]}
             fi
+        else
+            if [[ -z ${prefix_rewrite_url[i]} ]]; then
+                prefix_rewrite_url[i]=${prefix_store_id[i]/http:/https:}
+            fi
+
+            if [[ $old_url == "${other_prefix[i]}"* ]]; then
+                new_url=${this_prefix[i]}${old_url#${other_prefix[i]}}
+            fi
+        fi
+
+        if [[ $old_url != "$new_url" ]]; then
+            printf '%s: change %s to %s\n' "$1" "$old_url" "$new_url" >&2
+            printf 'OK %s=%s\n' "$1" "$new_url"
+            continue 2
         fi
     done
 

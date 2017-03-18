@@ -17,20 +17,14 @@ qubes-updates-proxy, using standalone Squid (no Apache etc. involved).
    is smaller, making attacks (where valid signatures for malicious packages
    can be produced somehow) more targeted even over Tor, i.e. less likely to be
    detected.
-3. Clients can DOS each other's package updaters by poisoning the cache with
-   bogus updates, because qubes-updates-cache's deduplication makes no attempt
-   to verify that a file is requested from a server that's in an official
-   mirror rotation. This can be prevented by selecting a specific mirror in
-   /etc/qubes-updates-cache/urls.conf, e.g. by removing the comment character
-   from lines 4 and 9.
-4. Clients can determine if a package is installed on another client on the
+3. Clients can determine if a package is installed on another client on the
    same physical computer by requesting it and measuring cache response time.
-5. Preferably, qubes-updates-cache should be hosted on a separate ProxyVM only
+4. Preferably, qubes-updates-cache should be hosted on a separate ProxyVM only
    used by templates, not by template-based VMs: Otherwise, the only thing that
    prevents template-based VMs (which are more likely to be compromised than
-   the templates themselves) from also launching attacks (3) and (4) is the
-   firewall rule denying access to the updates proxy port; but the Qubes
-   firewall is not intended to be a security mechanism.
+   the templates themselves) from also launching attack (3) is the firewall
+   rule denying access to the updates proxy port; but the Qubes firewall is not
+   intended to be a security mechanism.
 
 
         Installation
@@ -48,6 +42,13 @@ ProxyVM's template, carefully inspect its contents there and:
     [squidp's template] # dnf install squid  # or "apt-get install squid3"
     [squidp's template] # ./install
     [squidp's template] # poweroff
+
+If squidp's netvm is torifying (e.g. sys-whonix), you can transparently rewrite
+many repository URLs to .onion:
+
+    [squidp] # mkdir -p /usr/local/etc/qubes-updates-cache/urls
+    [squidp] # ln -s /etc/qubes-updates-cache/urls/10-onion.bash.EXAMPLE \
+           /usr/local/etc/qubes-updates-cache/urls/10-onion.bash
 
 Make your new ProxyVM the netvm for each of the clients whose package updates
 you want to cache (in this example, a Whonix workstation template), and ensure
