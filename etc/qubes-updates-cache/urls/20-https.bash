@@ -52,7 +52,7 @@ prefix_rewrite_url+=( '' )
 
 regex+=( '' )
 suffix_captured+=( '' )
-prefix_store_id+=( http://deb.torproject.org )
+prefix_store_id+=( http://deb.torproject.org/ )
 prefix_rewrite_url+=( '' )
 
 
@@ -60,5 +60,5 @@ prefix_rewrite_url+=( '' )
 
 regex+=( '' )
 suffix_captured+=( '' )
-prefix_store_id+=( http://dl.google.com )
+prefix_store_id+=( http://dl.google.com/ )
 prefix_rewrite_url+=( '' )
