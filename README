@@ -50,6 +50,12 @@ many repository URLs to .onion:
     [squidp] # ln -s /etc/qubes-updates-cache/urls/10-onion.bash.EXAMPLE \
            /usr/local/etc/qubes-updates-cache/urls/10-onion.bash
 
+If your Squid build's HTTPS support is disabled (Debian) or broken (Fedora 25),
+you need to deactivate the rewrite-to-HTTPS rules:
+
+    [squidp] # mkdir -p /usr/local/etc/qubes-updates-cache/urls
+    [squidp] # >        /usr/local/etc/qubes-updates-cache/urls/20-https.bash
+
 Make your new ProxyVM the netvm for each of the clients whose package updates
 you want to cache (in this example, a Whonix workstation template), and ensure
 connections to the updates cache (which uses the same IP:port as the non-

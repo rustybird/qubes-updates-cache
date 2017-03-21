@@ -6,12 +6,7 @@ if [[ $1 != rewrite-url && $1 != store-id ]]; then
 fi
 
 
-# load configuration files
-
-regex=()
-suffix_captured=()
-prefix_store_id=()
-prefix_rewrite_url=()
+# load configuration
 
 dirs=( {/usr/local,}/etc/qubes-updates-cache/urls/ )
 readarray -t files < <(
@@ -29,43 +24,75 @@ for f in "${files[@]}"; do
     done
 done
 
+for u in "${upgrades[@]}"; do
+    prefix_rewrite_url_names+=( prefix_rewrite_url_"$u" )
+done
+
+
+# preprocess rules
+
+for p in "${prefix_rewrite_url_names[@]}"; do
+    declare -n prefix_rewrite_url="$p"
+
+    for i in ${!prefix_rewrite_url[@]}; do
+        if [[ ${prefix_rewrite_url[i]} =~ ^[^:]+$ ]]; then
+            # simple scheme change
+            prefix_rewrite_url[i]+=:${prefix_store_id[i]#*:}
+        fi
+    done
+done
+
 
 # mangle URLs
 
-if [[ $1 == store-id ]]; then
-    declare -n  this_prefix=prefix_store_id
-    declare -n other_prefix=prefix_rewrite_url
-else
-    declare -n  this_prefix=prefix_rewrite_url
-    declare -n other_prefix=prefix_store_id
-fi
+case $1 in
+    store-id)
+         this_prefix_names=( prefix_store_id )
+        other_prefix_names=( "${prefix_rewrite_url_names[@]}" )
+    ;;
+    rewrite-url)
+         this_prefix_names=( "${prefix_rewrite_url_names[@]}" )
+        other_prefix_names=( prefix_store_id )
+    ;;
+esac
 
 export LC_ALL=C
 while read -r old_url _ignored_rest_of_line; do
     new_url=$old_url
 
-    for i in ${!this_prefix[@]}; do
-        if [[ ${regex[i]} ]]; then
-            if [[ ${this_prefix[i]} && $old_url =~ ${regex[i]} ]]; then
-                new_url=${this_prefix[i]}${BASH_REMATCH[${suffix_captured[i]}]}
-            fi
-        else
-            if [[ -z ${prefix_rewrite_url[i]} ]]; then
-                prefix_rewrite_url[i]=${prefix_store_id[i]/http:/https:}
+    for t in "${this_prefix_names[@]}"; do
+        declare -n this_prefix="$t"
+
+        for i in ${!this_prefix[@]}; do
+            [[ ${this_prefix[i]} ]] || continue
+
+            if [[ ${regex[i]} ]]; then
+                if [[ $old_url =~ ${regex[i]} ]]; then
+                    new_url=${this_prefix[i]}
+                    new_url+=${BASH_REMATCH[${suffix_captured[i]}]}
+                    break 2
+                fi
+            else
+                for o in "${other_prefix_names[@]}"; do
+                    declare -n other_prefix="$o"
+
+                    if [[ "${other_prefix[i]}" &&
+                          $old_url == "${other_prefix[i]}"* ]]; then
+                        new_url=${this_prefix[i]}
+                        new_url+=${old_url#${other_prefix[i]}}
+                        break 3
+                    fi
+                done
             fi
 
-            if [[ $old_url == "${other_prefix[i]}"* ]]; then
-                new_url=${this_prefix[i]}${old_url#${other_prefix[i]}}
-            fi
-        fi
-
-        if [[ $old_url != "$new_url" ]]; then
-            printf '%s: change %s to %s\n' "$1" "$old_url" "$new_url" >&2
-            printf 'OK %s=%s\n' "$1" "$new_url"
-            continue 2
-        fi
+        done
     done
 
-    printf '%s: keep %s\n' "$1" "$old_url" >&2
-    printf 'ERR\n'
+    if [[ $old_url == "$new_url" ]]; then
+        printf '%s: keep %s\n' "$1" "$old_url" >&2
+        printf 'ERR\n'
+    else
+        printf '%s: change %s to %s\n' "$1" "$old_url" "$new_url" >&2
+        printf 'OK %s=%s\n' "$1" "$new_url"
+    fi
 done
