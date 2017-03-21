@@ -1,7 +1,7 @@
 # RPM Fusion
 
-regex+=( '([^/]*[/.-])?rpmfusion([/.-][^/]*)?/((nonfree|free)/.*)' )
-suffix_captured+=( 3 )
+regex+=( '[/.-]rpmfusion([/.-].*)?/((nonfree|free)/.*)' )
+suffix_captured+=( 2 )
 prefix_store_id+=(     http://download1.rpmfusion.org/ )
 prefix_rewrite_url+=( https://download1.rpmfusion.org/ )
 
