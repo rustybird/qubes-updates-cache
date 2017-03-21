@@ -8,7 +8,7 @@ prefix_rewrite_url+=( https://download1.rpmfusion.org/ )
 
 # Fedora
 
-regex+=( '[/.-]fedora(project)?([/.-].*)?/((releases|updates)/[0-9][0-9]/.*)' )
+regex+=( '[/.-][fF]edora(project)?([/.-].*)?/((releases|updates)/[0-9][0-9]/.*)' )
 suffix_captured+=( 3 )
 prefix_store_id+=(     http://dl.fedoraproject.org/pub/fedora/linux/ )
 prefix_rewrite_url+=( https://dl.fedoraproject.org/pub/fedora/linux/ )
