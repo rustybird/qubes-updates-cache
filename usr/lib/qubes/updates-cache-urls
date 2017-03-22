@@ -47,12 +47,12 @@ done
 
 case $1 in
     store-id)
-          to_prefix_names=( prefix_store_id )
         from_prefix_names=( "${prefix_rewrite_url_names[@]}" )
+          to_prefix_names=( prefix_store_id )
     ;;
     rewrite-url)
-          to_prefix_names=( "${prefix_rewrite_url_names[@]}" )
         from_prefix_names=( prefix_store_id )
+          to_prefix_names=( "${prefix_rewrite_url_names[@]}" )
     ;;
 esac
 
