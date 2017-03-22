@@ -79,7 +79,7 @@ while read -r old_url _rest_of_line; do
                     if [[ ${other_prefix[i]} &&
                           $old_url == "${other_prefix[i]}"* ]]; then
                         new_url=${this_prefix[i]}
-                        new_url+=${old_url#${other_prefix[i]}}
+                        new_url+=${old_url#"${other_prefix[i]}"}
                         break 3
                     fi
                 done
