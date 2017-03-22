@@ -17,7 +17,7 @@ readarray -t files < <(
 
 for f in "${files[@]}"; do
     for d in "${dirs[@]}"; do
-        if [[ -e "$d/$f" ]]; then
+        if [[ -e $d/$f ]]; then
             source "$d/$f"
             break
         fi
@@ -57,7 +57,7 @@ case $1 in
 esac
 
 export LC_ALL=C
-while read -r old_url _ignored_rest_of_line; do
+while read -r old_url _rest_of_line; do
     new_url=$old_url
 
     for t in "${this_prefix_names[@]}"; do
@@ -76,7 +76,7 @@ while read -r old_url _ignored_rest_of_line; do
                 for o in "${other_prefix_names[@]}"; do
                     declare -n other_prefix="$o"
 
-                    if [[ "${other_prefix[i]}" &&
+                    if [[ ${other_prefix[i]} &&
                           $old_url == "${other_prefix[i]}"* ]]; then
                         new_url=${this_prefix[i]}
                         new_url+=${old_url#${other_prefix[i]}}
@@ -84,7 +84,6 @@ while read -r old_url _ignored_rest_of_line; do
                     fi
                 done
             fi
-
         done
     done
 
