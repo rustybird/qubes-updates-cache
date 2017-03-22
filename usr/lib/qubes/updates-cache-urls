@@ -47,12 +47,12 @@ done
 
 case $1 in
     store-id)
-         this_prefix_names=( prefix_store_id )
-        other_prefix_names=( "${prefix_rewrite_url_names[@]}" )
+          to_prefix_names=( prefix_store_id )
+        from_prefix_names=( "${prefix_rewrite_url_names[@]}" )
     ;;
     rewrite-url)
-         this_prefix_names=( "${prefix_rewrite_url_names[@]}" )
-        other_prefix_names=( prefix_store_id )
+          to_prefix_names=( "${prefix_rewrite_url_names[@]}" )
+        from_prefix_names=( prefix_store_id )
     ;;
 esac
 
@@ -60,26 +60,26 @@ export LC_ALL=C
 while read -r old_url _rest_of_line; do
     new_url=$old_url
 
-    for t in "${this_prefix_names[@]}"; do
-        declare -n this_prefix="$t"
+    for t in "${to_prefix_names[@]}"; do
+        declare -n to_prefix="$t"
 
-        for i in ${!this_prefix[@]}; do
-            [[ ${this_prefix[i]} ]] || continue
+        for i in ${!to_prefix[@]}; do
+            [[ ${to_prefix[i]} ]] || continue
 
             if [[ ${regex[i]} ]]; then
                 if [[ $old_url =~ ${regex[i]} ]]; then
-                    new_url=${this_prefix[i]}
+                    new_url=${to_prefix[i]}
                     new_url+=${BASH_REMATCH[${suffix_captured[i]}]}
                     break 2
                 fi
             else
-                for o in "${other_prefix_names[@]}"; do
-                    declare -n other_prefix="$o"
+                for f in "${from_prefix_names[@]}"; do
+                    declare -n from_prefix="$f"
 
-                    if [[ ${other_prefix[i]} &&
-                          $old_url == "${other_prefix[i]}"* ]]; then
-                        new_url=${this_prefix[i]}
-                        new_url+=${old_url#"${other_prefix[i]}"}
+                    if [[ ${from_prefix[i]} &&
+                          $old_url == "${from_prefix[i]}"* ]]; then
+                        new_url=${to_prefix[i]}
+                        new_url+=${old_url#"${from_prefix[i]}"}
                         break 3
                     fi
                 done
