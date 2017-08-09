@@ -34,7 +34,7 @@ netvm, and enable the qubes-updates-cache service:
 
     [dom0] $ qvm-create --proxy --label red squidp
     [dom0] $ qvm-prefs --set squidp netvm default  # or sys-whonix etc.
-    [dom0] $ qvm-service squidp --enable qubes-updates-cache
+    [dom0] $ qvm-service --enable squidp qubes-updates-cache
 
 Copy this directory (containing the README you're reading) into your new
 ProxyVM's template, carefully inspect its contents there and:
@@ -67,7 +67,7 @@ caching updates proxy) are allowed:
 Finally, for Whonix gateway/workstation clients, you currently need to bypass
 the safety mechanism that checks for a torified update proxy:
 
-    [dom0] $ qvm-service whonix-ws --enable whonix-secure-proxy
+    [dom0] $ qvm-service --enable whonix-ws whonix-secure-proxy
 
 That's it! Up to 4 GiB of package updates will be cached to squidp's volatile
 storage in /var/lib/qubes/vm-updates/. If you want to keep them across reboots,
