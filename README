@@ -1,4 +1,5 @@
-        qubes-updates-cache, a Squid-based package update cache
+        qubes-updates-cache for Qubes R4.0
+        (For Qubes R3.2 switch to the "release3.2" git branch)
 
 Updating my various templates was getting a little annoying with all the
 redundant network traffic, so I set up a qubes-updates-cache modeled on
@@ -19,25 +20,19 @@ qubes-updates-proxy, using standalone Squid (no Apache etc. involved).
    detected.
 3. Clients can determine if a package is installed on another client on the
    same physical computer by requesting it and measuring cache response time.
-4. Preferably, qubes-updates-cache should be hosted on a separate ProxyVM only
-   used by templates, not by template-based VMs: Otherwise, the only thing that
-   prevents template-based VMs (which are more likely to be compromised than
-   the templates themselves) from also launching attack (3) is the firewall
-   rule denying access to the updates proxy port; but the Qubes firewall is not
-   intended to be a security mechanism.
 
 
         Installation
 
-Create a new ProxyVM (which currently cannot be Whonix based), ensure it has a
-netvm, and enable the qubes-updates-cache service:
+Create a new VM (which currently cannot be Whonix based), ensure it has the
+netvm you want, and enable the qubes-updates-cache service:
 
-    [dom0] $ qvm-create --proxy --label red squidp
-    [dom0] $ qvm-prefs --set squidp netvm default  # or sys-whonix etc.
+    [dom0] $ qvm-create --label red squidp
+    [dom0] $ qvm-prefs --set squidp netvm sys-whonix  # or keep the default
     [dom0] $ qvm-service --enable squidp qubes-updates-cache
 
 Copy this directory (containing the README you're reading) into your new
-ProxyVM's template, carefully inspect its contents there and:
+VM's template, carefully inspect its contents there and:
 
     [squidp's template] # dnf install squid  # or "apt-get install squid3"
     [squidp's template] # ./install
@@ -56,13 +51,10 @@ you need to deactivate the rewrite-to-HTTPS rules:
     [squidp] # mkdir -p /usr/local/etc/qubes-updates-cache/urls
     [squidp] # >        /usr/local/etc/qubes-updates-cache/urls/20-https.bash
 
-Make your new ProxyVM the netvm for each of the clients whose package updates
-you want to cache (in this example, a Whonix workstation template), and ensure
-connections to the updates cache (which uses the same IP:port as the non-
-caching updates proxy) are allowed:
+Edit the qubes.UpdatesProxy policy file and change all occurences of
+"target=sys-net" or "target=sys-whonix" to "target=squidp".
 
-    [dom0] $ qvm-prefs --set whonix-ws netvm squidp
-    [dom0] $ qvm-firewall whonix-ws --yum-proxy allow
+    [dom0] # vim /etc/qubes-rpc/policy/qubes.UpdatesProxy
 
 Finally, for Whonix gateway/workstation clients, you currently need to bypass
 the safety mechanism that checks for a torified update proxy:
