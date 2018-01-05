@@ -8,28 +8,24 @@ fi
 
 # load configuration
 
-dirs=( {/usr/local,}/etc/qubes-updates-cache/urls/ )
-readarray -t files < <(
-    find "${dirs[@]}" -maxdepth 1 -name '*.bash' 2>/dev/null |
-    sed 's#.*/##' |
-    sort -u
+dir2=/etc/qubes-updates-cache/urls
+dir1=/usr/local/$dir2
+
+while IFS= read -r -d '' f; do
+    PATH=$dir1:$dir2 source -- "$f"
+done < <(
+    shopt -s nullglob
+    for f in "$dir1"/*.bash "$dir2"/*.bash; do
+        printf '%s\0' ${f##*/}
+    done | sort -uz
 )
 
-for f in "${files[@]}"; do
-    for d in "${dirs[@]}"; do
-        if [[ -e $d/$f ]]; then
-            source "$d/$f"
-            break
-        fi
-    done
-done
+
+# preprocess rules
 
 for u in "${upgrades[@]}"; do
     prefix_rewrite_url_names+=( prefix_rewrite_url_"$u" )
 done
-
-
-# preprocess rules
 
 for p in "${prefix_rewrite_url_names[@]}"; do
     declare -n prefix_rewrite_url="$p"
