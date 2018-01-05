@@ -9,6 +9,3 @@ useradd --shell /bin/false --home / --system --user-group $id
 install -d -m 750 -o $id -g $id "$DESTDIR"/var/lib/qubes/$id
 umask 022
 cp -R etc usr "$DESTDIR"/
-
-# oh Debian
-test -e /usr/sbin/squid || ln -s squid3 /usr/sbin/squid

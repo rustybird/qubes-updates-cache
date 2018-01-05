@@ -34,7 +34,7 @@ netvm you want, and enable the qubes-updates-cache service:
 Copy this directory (containing the README you're reading) into your new
 VM's template, carefully inspect its contents there and:
 
-    [squidp's template] # dnf install squid  # or "apt-get install squid3"
+    [squidp's template] # dnf install squid  # or "apt-get install squid"
     [squidp's template] # ./install
     [squidp's template] # poweroff
 
