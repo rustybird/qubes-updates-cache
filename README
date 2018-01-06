@@ -38,19 +38,19 @@ VM's template, carefully inspect its contents there and:
     [squidp's template] # ./install
     [squidp's template] # poweroff
 
-If your Squid's HTTPS support were somehow neither disabled nor broken, you
-could transparently rewrite many repository URLs to HTTPS:
-
-    [squidp] # mkdir -p /usr/local/etc/qubes-updates-cache/urls
-    [squidp] # ln -s /etc/qubes-updates-cache/urls/20-https.bash.EXAMPLE \
-           /usr/local/etc/qubes-updates-cache/urls/20-https.bash
-
 If squidp's netvm is torifying (e.g. sys-whonix), you can transparently rewrite
 many repository URLs to .onion:
 
     [squidp] # mkdir -p /usr/local/etc/qubes-updates-cache/urls
     [squidp] # ln -s /etc/qubes-updates-cache/urls/10-onion.bash.EXAMPLE \
            /usr/local/etc/qubes-updates-cache/urls/10-onion.bash
+
+If your Squid's HTTPS support were somehow neither disabled nor broken, you
+could transparently rewrite many repository URLs to HTTPS:
+
+    [squidp] # mkdir -p /usr/local/etc/qubes-updates-cache/urls
+    [squidp] # ln -s /etc/qubes-updates-cache/urls/20-https.bash.EXAMPLE \
+           /usr/local/etc/qubes-updates-cache/urls/20-https.bash
 
 Edit the qubes.UpdatesProxy policy file and change all occurences of
 "target=sys-net" or "target=sys-whonix" to "target=squidp".
