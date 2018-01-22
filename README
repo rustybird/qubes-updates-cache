@@ -45,8 +45,9 @@ many repository URLs to .onion:
     [squidp] # ln -s /etc/qubes-updates-cache/urls/10-onion.bash.EXAMPLE \
            /usr/local/etc/qubes-updates-cache/urls/10-onion.bash
 
-If your Squid's HTTPS support were somehow neither disabled nor broken, you
-could transparently rewrite many repository URLs to HTTPS:
+If your Squid version is >= 4.0.23 and it is built with OpenSSL support (which
+it is not on Debian), you can transparently rewrite many repository URLs to
+HTTPS:
 
     [squidp] # mkdir -p /usr/local/etc/qubes-updates-cache/urls
     [squidp] # ln -s /etc/qubes-updates-cache/urls/20-https.bash.EXAMPLE \
