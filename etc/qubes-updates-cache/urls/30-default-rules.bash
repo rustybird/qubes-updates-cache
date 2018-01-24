@@ -33,19 +33,19 @@ prefix_rewrite_url_onion+=( '' )
 
 
 # Qubes
-# https://github.com/QubesOS/qubes-issues/issues/2265
+# https://www.qubes-os.org/news/2018/01/23/qubes-whonix-next-gen-tor-onion-services/
 
 regex+=( '' )
 suffix_captured+=( '' )
 prefix_store_id+=(          http://deb.qubes-os.org/ )
 prefix_rewrite_url_https+=( https )
-prefix_rewrite_url_onion+=( http://deb.qubesos4rrrrz6n4.onion/ )
+prefix_rewrite_url_onion+=( http://deb.sik5nlgfc5qylnnsr57qrbm64zbdx6t4lreyhpon3ychmxmiem7tioad.onion/ )
 
 regex+=( '' )
 suffix_captured+=( '' )
 prefix_store_id+=(          http://yum.qubes-os.org/ )
 prefix_rewrite_url_https+=( https )
-prefix_rewrite_url_onion+=( http://yum.qubesos4rrrrz6n4.onion/ )
+prefix_rewrite_url_onion+=( http://yum.sik5nlgfc5qylnnsr57qrbm64zbdx6t4lreyhpon3ychmxmiem7tioad.onion/ )
 
 
 # Whonix
@@ -55,7 +55,7 @@ regex+=( '' )
 suffix_captured+=( '' )
 prefix_store_id+=(          http://deb.whonix.org/ )
 prefix_rewrite_url_https+=( https )
-prefix_rewrite_url_onion+=( http://deb.kkkkkkkkkk63ava6.onion/ )
+prefix_rewrite_url_onion+=( http://deb.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion/ )
 
 
 # Tor
