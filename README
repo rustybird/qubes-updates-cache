@@ -24,17 +24,18 @@ qubes-updates-proxy, using standalone Squid (no Apache etc. involved).
 
         Installation
 
-Create a new VM (which currently cannot be Whonix based), ensure it has the
-netvm you want, and enable the qubes-updates-cache service:
+Create a new VM (which should be based on a distribution that packages Squid
+>= 4.0.23 with OpenSSL support, e.g. Fedora >= 26), ensure it has the netvm
+you want, and enable the qubes-updates-cache service:
 
-    [dom0] $ qvm-create --label red squidp
+    [dom0] $ qvm-create --template fedora-26 --label red squidp
     [dom0] $ qvm-prefs --set squidp netvm sys-whonix  # or keep the default
     [dom0] $ qvm-service --enable squidp qubes-updates-cache
 
 Copy this directory (containing the README you're reading) into your new
 VM's template, carefully inspect its contents there and:
 
-    [squidp's template] # dnf install squid  # or "apt-get install squid"
+    [squidp's template] # dnf install squid
     [squidp's template] # ./install
     [squidp's template] # poweroff
 
@@ -45,13 +46,12 @@ many repository URLs to .onion:
     [squidp] # ln -s /etc/qubes-updates-cache/urls/10-onion.bash.EXAMPLE \
            /usr/local/etc/qubes-updates-cache/urls/10-onion.bash
 
-If your Squid version is >= 4.0.23 and it is built with OpenSSL support (which
-it is not on Debian), you can transparently rewrite many repository URLs to
-HTTPS:
+If your Squid build's HTTPS support is disabled (e.g. on Debian-based
+distributions) or broken (Squid < 4.0.23), you need to deactivate the
+rewrite-to-HTTPS rules:
 
     [squidp] # mkdir -p /usr/local/etc/qubes-updates-cache/urls
-    [squidp] # ln -s /etc/qubes-updates-cache/urls/20-https.bash.EXAMPLE \
-           /usr/local/etc/qubes-updates-cache/urls/20-https.bash
+    [squidp] # >        /usr/local/etc/qubes-updates-cache/urls/20-https.bash
 
 Edit the qubes.UpdatesProxy policy file and change all occurences of
 "target=sys-net" or "target=sys-whonix" to "target=squidp".
