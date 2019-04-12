@@ -1,5 +1,4 @@
         qubes-updates-cache for Qubes R4.0
-        (For Qubes R3.2 switch to the "release3.2" git branch)
 
 Updating my various templates was getting a little annoying with all the
 redundant network traffic, so I set up a qubes-updates-cache modeled on
