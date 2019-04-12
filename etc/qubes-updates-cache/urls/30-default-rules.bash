@@ -33,18 +33,19 @@ prefix_rewrite_url_onion+=( '' )
 
 
 # Qubes
+# https://github.com/QubesOS/qubes-core-agent-linux/pull/154
 
 regex+=( '' )
 suffix_captured+=( '' )
 prefix_store_id+=(          http://deb.qubes-os.org/ )
 prefix_rewrite_url_https+=( https )
-prefix_rewrite_url_onion+=( '' )
+prefix_rewrite_url_onion+=( http://deb.qubesosfasa4zl44o4tws22di6kepyzfeqv3tg4e3ztknltfxqrymdad.onion/ )
 
 regex+=( '' )
 suffix_captured+=( '' )
 prefix_store_id+=(          http://yum.qubes-os.org/ )
 prefix_rewrite_url_https+=( https )
-prefix_rewrite_url_onion+=( '' )
+prefix_rewrite_url_onion+=( http://yum.qubesosfasa4zl44o4tws22di6kepyzfeqv3tg4e3ztknltfxqrymdad.onion/ )
 
 
 # Whonix
