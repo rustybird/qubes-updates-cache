@@ -7,18 +7,18 @@ qubes-updates-proxy, using standalone Squid (no Apache etc. involved).
 
         Security considerations
 
-1. For Tor users, the remote network has some insight about what's installed
-   on the same physical computer, because there is no Tor circuit isolation
-   between update requests from different clients. This can be prevented by
-   waiting at least 10 minutes (or sending NEWNYM) between updating different
-   clients. (The same is true of qubes-updates-proxy.)
-2. The remote network can distinguish if a file is requested via qubes-updates-
+1. The remote network can distinguish if a file is requested via qubes-updates-
    cache (Squid) or via qubes-updates-proxy (tinyproxy). The former's user base
    is smaller, making attacks (where valid signatures for malicious packages
    can be produced somehow) more targeted even over Tor, i.e. less likely to be
    detected.
-3. Clients can determine if a package is installed on another client on the
+2. Clients can determine if a package is installed on another client on the
    same physical computer by requesting it and measuring cache response time.
+3. (The following is also true of qubes-updates-proxy:) For Tor users, the
+   remote network has some insight about what's installed on the same physical
+   computer, because there is no Tor circuit isolation between update requests
+   from different clients. This can be prevented by waiting at least 10 minutes
+   (or sending NEWNYM) between updating different clients.
 
 
         Installation
