@@ -5,13 +5,13 @@ regex+=( '/[dD]ebian/((dists|pool)/.*)' )
 suffix_captured+=( 1 )
 prefix_store_id+=(          http://deb.debian.org/debian/ )
 prefix_rewrite_url_https+=( https://cdn-aws.deb.debian.org/debian/ )
-prefix_rewrite_url_onion+=( http://vwakviie2ienjx6t.onion/debian/ )
+prefix_rewrite_url_onion+=( http://2s4yqjx5ul6okpp3f2gaunr2syex5jgbfpfvhxxbbjwnrsvbk5v3qbid.onion/debian/ )
 
 regex+=( '' )
 suffix_captured+=( '' )
 prefix_store_id+=(          http://security.debian.org/ )
 prefix_rewrite_url_https+=( https://cdn-aws.deb.debian.org/debian-security/ )
-prefix_rewrite_url_onion+=( http://sgvtcaew4bxjd7ln.onion/debian-security/ )
+prefix_rewrite_url_onion+=( http://5ajw6aqf3ep7sijnscdzw77t7xq4xjpsy335yb2wiwgouo7yfxtjlmid.onion/debian-security/ )
 
 
 # RPM Fusion
@@ -65,7 +65,7 @@ regex+=( '' )
 suffix_captured+=( '' )
 prefix_store_id+=(          http://deb.torproject.org/ )
 prefix_rewrite_url_https+=( https )
-prefix_rewrite_url_onion+=( http://sdscoq7snqtznauu.onion/ )
+prefix_rewrite_url_onion+=( http://apow7mjfryruh65chtdydfmqfpj5btws7nbocgtaovhvezgccyjazpqd.onion/ )
 
 
 # Google
