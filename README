@@ -27,7 +27,7 @@ Create a new VM (which should be based on a distribution that packages Squid
 >= 4.0.23 with OpenSSL support, e.g. Fedora >= 27), ensure it has the netvm
 you want, and enable the qubes-updates-cache service:
 
-    [dom0] $ qvm-create --template fedora-xx --label red squidp
+    [dom0] $ qvm-create --template fedora-XX --label red squidp
     [dom0] $ qvm-prefs --set squidp netvm sys-whonix  # or keep the default
     [dom0] $ qvm-service --enable squidp qubes-updates-cache
 
